@@ -1,0 +1,6 @@
+server:
+  port: 7000
+
+thread:
+  pool:
+    size: 1
