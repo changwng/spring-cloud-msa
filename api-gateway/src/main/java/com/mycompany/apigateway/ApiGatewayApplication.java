@@ -1,4 +1,4 @@
-package com.covenant.apigateway;
+package com.mycompany.apigateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

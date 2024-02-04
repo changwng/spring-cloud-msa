@@ -11,13 +11,20 @@ eureka:
 spring:
   application:
     name: apigateway-service
+
   cloud:
     gateway:
+      default-filters:
+        - GlobalFilter
       routes:
         - id: spring-service
           uri: lb://SPRING-SERVICE
           predicates:
             - Path=/spring-service/**
+          filters:
+            - BFFServiceCustomFilter
+#              https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#the-deduperesponseheader-gatewayfilter-factory
+#            - AddRequestHeader=X-Request-red, blue
 
 management:
   endpoints:
