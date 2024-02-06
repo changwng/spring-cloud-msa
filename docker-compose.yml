@@ -9,7 +9,7 @@ services:
     ports:
       - "8761:8761"
     networks:
-      - docker-network
+      - msa-network
 
   gateway-service:
     container_name: gateway-service
@@ -21,21 +21,8 @@ services:
     ports:
       - "9000:9000"
     networks:
-      - docker-network
+      - msa-network
     depends_on:
-      - discovery-service
-
-  docker-controll-service:
-    container_name: docker-controll-service
-    image: docker-controll:0.1
-    environment:
-      eureka.client.serviceUrl.defaultZone: "http://discovery-service:8761/eureka/"
-    ports:
-      - "8010:8010"
-    networks:
-      - docker-network
-    depends_on:
-      - gateway-service
       - discovery-service
 
   user-service:
@@ -52,10 +39,33 @@ services:
       - discovery-service
     restart: always
     networks:
-      - docker-network
+      - msa-network
+
+  postgres:
+    container_name: postgres
+    build:
+      context: ./postgres/
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    networks:
+      - msa-network
+
+  docker-controll-service:
+    container_name: docker-controll-service
+    image: docker-controll:0.1
+    environment:
+      eureka.client.serviceUrl.defaultZone: "http://discovery-service:8761/eureka/"
+    ports:
+      - "8010:8010"
+    networks:
+      - msa-network
+    depends_on:
+      - gateway-service
+      - discovery-service
 
 networks:
-  docker-network:
+  msa-network:
     driver: bridge
     ipam:
       config:
