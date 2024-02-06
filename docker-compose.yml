@@ -1,6 +1,19 @@
 version: "3.6"
 services:
 
+
+  postgres:
+    container_name: postgres
+    build:
+      context: ./postgres/
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+#    restart: always
+    networks:
+      - msa-network
+
+
   discovery-service:
     container_name: discovery-service
     build:
@@ -8,6 +21,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8761:8761"
+#    restart: always
     networks:
       - msa-network
 
@@ -20,49 +34,60 @@ services:
       eureka.client.serviceUrl.defaultZone: "http://discovery-service:8761/eureka/"
     ports:
       - "9000:9000"
-    networks:
-      - msa-network
     depends_on:
       - discovery-service
+#    restart: always
+    networks:
+      - msa-network
 
   user-service:
-    container_name: user
+    container_name: user-service
     build:
       context: ./user-service/
       dockerfile: Dockerfile
     environment:
       - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/
     ports:
+      - "8010:8010"
+    depends_on:
+      - gateway-service
+      - discovery-service
+#    restart: always
+    networks:
+      - msa-network
+
+  batch-service:
+    container_name: batch-service
+    build:
+      context: ./batch-service/
+      dockerfile: Dockerfile
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/
+    ports:
+      - "8020:8020"
+    depends_on:
+      - gateway-service
+      - discovery-service
+#    restart: always
+    networks:
+      - msa-network
+
+  docker-control-service:
+    container_name: docker-control-service
+    build:
+      context: ./docker-control-service/
+      dockerfile: Dockerfile
+    environment:
+      eureka.client.serviceUrl.defaultZone: "http://discovery-service:8761/eureka/"
+    ports:
       - "8030:8030"
     depends_on:
       - gateway-service
       - discovery-service
-    restart: always
+#    restart: always
     networks:
       - msa-network
 
-  postgres:
-    container_name: postgres
-    build:
-      context: ./postgres/
-      dockerfile: Dockerfile
-    ports:
-      - "5432:5432"
-    networks:
-      - msa-network
-
-  docker-controll-service:
-    container_name: docker-controll-service
-    image: docker-controll:0.1
-    environment:
-      eureka.client.serviceUrl.defaultZone: "http://discovery-service:8761/eureka/"
-    ports:
-      - "8010:8010"
-    networks:
-      - msa-network
-    depends_on:
-      - gateway-service
-      - discovery-service
 
 networks:
   msa-network:

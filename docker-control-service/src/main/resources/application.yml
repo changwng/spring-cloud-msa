@@ -1,5 +1,5 @@
 server:
-  port: 8010
+  port: 8030
 
 eureka:
   client:
@@ -10,4 +10,4 @@ eureka:
 
 spring:
   application:
-    name: spring-service
+    name: docker-control-service

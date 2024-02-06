@@ -10,21 +10,29 @@ eureka:
 
 spring:
   application:
-    name: apigateway-service
+    name: gateway-service
 
   cloud:
     gateway:
       default-filters:
         - GlobalFilter
       routes:
-        - id: spring-service
-          uri: lb://SPRING-SERVICE
+        - id: user-service
+          uri: lb://USER-SERVICE
           predicates:
-            - Path=/spring-service/**
+            - Path=/user-service/**
           filters:
             - BFFServiceCustomFilter
 #              https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#the-deduperesponseheader-gatewayfilter-factory
 #            - AddRequestHeader=X-Request-red, blue
+        - id: batch-service
+          uri: lb://BATCH-SERVICE
+          predicates:
+            - Path=/batch-service/**
+        - id: docker-service
+          uri: lb://DOCKER-SERVICE
+          predicates:
+            - Path=/docker-service/**
 
 management:
   endpoints:
