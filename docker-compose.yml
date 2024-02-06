@@ -3,7 +3,9 @@ services:
 
   discovery-service:
     container_name: discovery-service
-    image: eureka:0.1
+    build:
+      context: ./discovery-service/
+      dockerfile: Dockerfile
     ports:
       - "8761:8761"
     networks:
@@ -11,7 +13,9 @@ services:
 
   gateway-service:
     container_name: gateway-service
-    image: apigateway:0.1
+    build:
+      context: ./gateway-servicee/
+      dockerfile: Dockerfile
     environment:
       eureka.client.serviceUrl.defaultZone: "http://discovery-service:8761/eureka/"
     ports:
@@ -34,6 +38,26 @@ services:
       - gateway-service
       - discovery-service
 
+  user-service:
+    container_name: user
+    build:
+      context: ./user-service/
+      dockerfile: Dockerfile
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/
+    ports:
+      - "8030:8030"
+    depends_on:
+      - gateway-service
+      - discovery-service
+    restart: always
+    networks:
+      - docker-network
+
 networks:
   docker-network:
-    external: true
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1
