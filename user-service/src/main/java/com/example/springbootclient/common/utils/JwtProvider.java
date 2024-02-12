@@ -74,7 +74,7 @@ public class JwtProvider {
         Claims claims = parseClaims(accessToken);
 
         if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+            throw new RuntimeException("Token without credential.");
         }
 
         Collection<? extends GrantedAuthority> authorities =
@@ -91,14 +91,14 @@ public class JwtProvider {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+        } catch (SecurityException | MalformedJwtException e) {
+            log.error("Invalid JWT signature: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
+            log.error("JWT token has expired: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
+            log.error("JWT token is not supported: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            log.error("The JWT is invalid: {}", e.getMessage());
         }
         return false;
     }

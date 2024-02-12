@@ -1,5 +1,5 @@
 package com.example.springbootclient.domain.entity;
 
 public enum Authority {
-    ROLE_USER, ROLE_ADMIN
+    SUPER_ADMIN, GROUP_ADMIN, GROUP_USER
 }

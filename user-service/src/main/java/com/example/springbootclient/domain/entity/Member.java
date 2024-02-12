@@ -13,21 +13,36 @@ import lombok.NoArgsConstructor;
 public class Member {
 
     @Id
-    @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String email;
+    private String memberId;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    private String name;
+
+    private String email;
+
+    private String phoneNumber;
+
     @Builder
-    public Member(String email, String password, Authority authority) {
-        this.email = email;
+    public Member(
+            String memberId,
+            String password,
+            Authority authority,
+            String name,
+            String email,
+            String phoneNumber
+    ) {
+        this.memberId = memberId;
         this.password = password;
         this.authority = authority;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 }

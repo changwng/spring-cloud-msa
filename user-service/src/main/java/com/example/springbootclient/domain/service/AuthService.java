@@ -28,8 +28,8 @@ public class AuthService {
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
-        if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+        if (memberRepository.existsByMemberId(memberRequestDto.getMemberId())) {
+            throw new RuntimeException("Already a registered user");
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
@@ -58,16 +58,16 @@ public class AuthService {
     @Transactional
     public TokenDto reissue(TokenRequestDto tokenRequestDto) {
         if (!jwtProvider.validateToken(tokenRequestDto.getRefreshToken())) {
-            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+            throw new RuntimeException("Refresh Token is invalid.");
         }
 
         Authentication authentication = jwtProvider.getAuthentication(tokenRequestDto.getAccessToken());
 
         RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+                .orElseThrow(() -> new RuntimeException("Logout user."));
 
         if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
-            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+            throw new RuntimeException("Your information does not match.");
         }
 
         TokenDto tokenDto = jwtProvider.generateTokenDto(authentication);

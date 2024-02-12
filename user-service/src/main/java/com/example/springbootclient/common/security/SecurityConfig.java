@@ -34,12 +34,9 @@ public class SecurityConfig {
                 .requestMatchers( "/auth/**").permitAll()
                 .anyRequest().authenticated()
             )
-//            .formLogin(formLogin -> formLogin
-//                .loginPage("/api/v1/login")
-//                .defaultSuccessUrl("/home"))
-//            .logout((logout) -> logout
-//                .logoutSuccessUrl("/api/v1/login")
-//                .invalidateHttpSession(true))
+            .logout((logout) -> logout
+                .logoutSuccessUrl("/login") // logout 성공 시 이동할 url 변경 필요
+                .invalidateHttpSession(true))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
