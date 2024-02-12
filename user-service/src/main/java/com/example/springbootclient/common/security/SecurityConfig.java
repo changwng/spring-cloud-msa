@@ -1,9 +1,12 @@
 package com.example.springbootclient.common.security;
 
+import com.example.springbootclient.common.exception.JwtAccessDeniedHandler;
+import com.example.springbootclient.common.exception.JwtAuthenticationEntryPoint;
 import com.example.springbootclient.common.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -29,7 +32,11 @@ public class SecurityConfig {
         http
             .httpBasic(AbstractHttpConfigurer::disable)
             .csrf(AbstractHttpConfigurer::disable)
-            .cors(AbstractHttpConfigurer::disable)
+            .cors(Customizer.withDefaults())
+            .exceptionHandling(authenticationManager -> authenticationManager
+                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                .accessDeniedHandler(new JwtAccessDeniedHandler())
+            )
             .authorizeRequests((authorize) -> authorize
                 .requestMatchers( "/auth/**").permitAll()
                 .anyRequest().authenticated()
