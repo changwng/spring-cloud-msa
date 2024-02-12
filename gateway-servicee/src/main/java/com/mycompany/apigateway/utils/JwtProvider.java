@@ -1,6 +1,5 @@
-package com.example.springbootclient.common.utils;
+package com.mycompany.apigateway.utils;
 
-import com.example.springbootclient.common.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,34 +35,6 @@ public class JwtProvider {
     public JwtProvider(@Value("${jwt.token.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    public TokenDto generateTokenDto(Authentication authentication) {
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
-        long now = (new Date()).getTime();
-
-        Date accessTokenExpiresIn = new Date(now + ACCESS_EXPIRED_TIME);
-        String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .setExpiration(accessTokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
-
-        String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_EXPIRED_TIME))
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
-
-        return TokenDto.builder()
-                .grantType(BEARER_TYPE)
-                .accessToken(accessToken)
-                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
-                .refreshToken(refreshToken)
-                .build();
     }
 
     public Authentication getAuthentication(String accessToken) {

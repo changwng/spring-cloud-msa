@@ -31,7 +31,5 @@ jwt:
   token:
     access-expired-time: 3600000 # 1 hour
     refresh-expired-time: 604800000 # 1 week
-    refresh-token-name: refresh-token
-    access-token-name: access-token
     # echo 'spring-boot-spring-cloud-msa-user-service-spring-security-jwt-test' | base64
     secret: c3ByaW5nLWJvb3Qtc3ByaW5nLWNsb3VkLW1zYS11c2VyLXNlcnZpY2Utc3ByaW5nLXNlY3VyaXR5LWp3dC10ZXN0Cg==
