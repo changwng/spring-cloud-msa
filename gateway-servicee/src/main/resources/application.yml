@@ -15,7 +15,10 @@ spring:
   cloud:
     gateway:
       default-filters:
-        - GlobalFilter
+        - name: GlobalFilter
+          args:
+            preLogInfo: true
+            postLogInfo: true
       routes:
         - id: user-service
           uri: lb://USER-SERVICE
