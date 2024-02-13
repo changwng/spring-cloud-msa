@@ -25,7 +25,7 @@ spring:
           predicates:
             - Path=/user-service/**
           filters:
-            - BFFServiceCustomFilter
+            - JwtAuthorizationCheckFilter
             - RewritePath=/user-service/(?<segment>.*),/$\{segment}
 #              https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#the-deduperesponseheader-gatewayfilter-factory
 #            - AddRequestHeader=X-Request-red, blue
@@ -34,12 +34,14 @@ spring:
           predicates:
             - Path=/batch-service/**
           filters:
+            - JwtAuthorizationCheckFilter
             - RewritePath=/batch-service/(?<segment>.*),/$\{segment}
         - id: docker-control-service
           uri: lb://DOCKER-CONTROL-SERVICE
           predicates:
             - Path=/docker-control-service/**
           filters:
+            - JwtAuthorizationCheckFilter
             - RewritePath=/docker-control-service/(?<segment>.*),/$\{segment}
 
 management:

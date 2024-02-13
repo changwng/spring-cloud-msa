@@ -25,13 +25,13 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
             ServerHttpResponse response = exchange.getResponse();
 
             if (config.isPreLogInfo()) {
-                log.info("Golbal Filter Request -> IP : {}, URI : {}", request.getRemoteAddress().getAddress(), request.getURI());
-                log.info("Golbal Filter Request -> ID : {}, PATH : {}", request.getId(), request.getPath());
+                log.info("GolbalFilter Request -> IP : {}, URI : {}", request.getRemoteAddress().getAddress(), request.getURI());
+                log.info("GolbalFilter Request -> ID : {}, PATH : {}", request.getId(), request.getPath());
             }
 
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
                 if (config.isPostLogInfo()) {
-                    log.info("Golbal Filter Response -> IP : {}, URI : {}, 응답코드 : {}",
+                    log.info("GolbalFilter Response -> IP : {}, URI : {}, 응답코드 : {}",
                         request.getRemoteAddress().getAddress(),
                         request.getURI(),
                         response.getStatusCode()
