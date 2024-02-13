@@ -25,10 +25,7 @@ spring:
           predicates:
             - Path=/user-service/**
           filters:
-            - JwtAuthorizationCheckFilter
             - RewritePath=/user-service/(?<segment>.*),/$\{segment}
-#              https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#the-deduperesponseheader-gatewayfilter-factory
-#            - AddRequestHeader=X-Request-red, blue
         - id: batch-service
           uri: lb://BATCH-SERVICE
           predicates:
