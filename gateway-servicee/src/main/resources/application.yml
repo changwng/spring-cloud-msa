@@ -23,16 +23,21 @@ spring:
             - Path=/user-service/**
           filters:
             - BFFServiceCustomFilter
+            - RewritePath=/user-service/(?<segment>.*),/$\{segment}
 #              https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#the-deduperesponseheader-gatewayfilter-factory
 #            - AddRequestHeader=X-Request-red, blue
         - id: batch-service
           uri: lb://BATCH-SERVICE
           predicates:
             - Path=/batch-service/**
-        - id: docker-service
-          uri: lb://DOCKER-SERVICE
+          filters:
+            - RewritePath=/batch-service/(?<segment>.*),/$\{segment}
+        - id: docker-control-service
+          uri: lb://DOCKER-CONTROL-SERVICE
           predicates:
-            - Path=/docker-service/**
+            - Path=/docker-control-service/**
+          filters:
+            - RewritePath=/docker-control-service/(?<segment>.*),/$\{segment}
 
 management:
   endpoints:
@@ -42,6 +47,4 @@ management:
 
 jwt:
   token:
-    access-expired-time: 3600000
-    refresh-expired-time: 604800000
     secret: c3ByaW5nLWJvb3Qtc3ByaW5nLWNsb3VkLW1zYS11c2VyLXNlcnZpY2Utc3ByaW5nLXNlY3VyaXR5LWp3dC10ZXN0Cg==
