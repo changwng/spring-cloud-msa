@@ -2,69 +2,27 @@ spring-cloud-msa
 ============
 
 ## 개요
-spring-cloud 라이브러리를 활용해서 만든 msa framework
+#### spring-cloud 라이브러리를 활용해서 만든 msa framework
+#### docker와 k8s 환경에서 구축하여 사용
 
 ## 구성
-  - api-gateway
-  - springboot service 1
-  - springboot service 2
-  - eureka (discovery service)
+  - batch-service
+  - business-service
+  - discovery service
+  - gateway-service
+  - postgres
+  - user-service
 
 ## 설명
-### 1) API 게이트웨이
-- api gateway는 jwt(인증, 인가), 라우팅, 기능 제공
+### 1) 배치 서비스
+- 스프링 배치, 스케쥴링을 사용할 수 있다.
 
-```yml
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defalutZone: http://localhost:8761/eureka
+### 2) 비즈니스 서비스
+- 목적에 따라 비즈니스 로직을 구현하는 API 서버이다.
 
-spring:
-  application:
-    name: apigateway-service
-  cloud:
-    gateway:
-      routes:
-        - id: spring-service
-          uri: lb://SPRING-SERVICE
-          predicates:
-            - Path=/spring-service/**
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health, info, metrics, prometheus, gateway
-```
-라운드 로빈 방식의 로드밸런싱 기능 제공.
-spring.cloud.gateway.routes의 하위 노드에서 spring.application.name과 url경로를 등록하여 라우팅
-
-
-### 2) 스프링부트 서비스 1
-- 비즈니스 로직으로 구축된 api server
-
-### 3) 스프링부트 서비스 2
-- springboot service 1과 동일하고 로드밸런싱 테스트를 위해 copy
-
-```yml
-spring:
-  application:
-    name: spring-service
-
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
-```
-api-gateway에 등록할 name정의 및 eureka서버에 등록 설정
-
-### 4) 유레카(발견 서비스)
-- msa의 단점인 서버간 관계의 복잡성을 eureka에 등록을 하여 관리  
+### 3) 유레카(발견 서비스)
+- msa의 단점인 서버간 관계의 복잡성을 eureka에 등록을 하여 관리한다.
+- API Gateway는 여기서 등록된 Service Name으로 route한다.
 
 ```yml
 spring:
@@ -76,4 +34,28 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
 ```
-client가 아닌 eureka 본서버이기 때문에 모든 설정은 false 
+client가 아닌 eureka 본서버이기 때문에 모든 설정은 false여야 한다.
+
+
+### 4) API 게이트웨이
+- api gateway는 jwt(인증, 인가), 라우팅, 기능을 제공한다.
+- 라운드 로빈 방식의 로드밸런싱 기능을 제공한다.
+- defaultZone의 hostname은 docker와 k8s의 클러스터 내부 IP를 이용해야하기 때문에 prod에 설정한다. 
+```yml
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: gateway-service
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+```
+
+
+### 5) postgres
+- DB서버를 별도로 구축하지 않고도 docker나 k8s에서 바로 실행되어 연결된다.
+
+### 6) 유저 서비스
+- 기본 회원가입 및 로그인 기능을 제공하며 이때 jwt 토큰이 발급된다.
