@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+  labels:
+    app: msa-gateway
+  namespace: msa-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msa-gateway
+  template:
+    metadata:
+      labels:
+        app: msa-gateway
+    spec:
+      nodeSelector:
+        msa-node: "true"
+      containers:
+      - env:
+        - name: spring.profiles.active
+          value: prod
+        image: ${ip}:${port}/msa/msa-gateway-service:v20240327
+        name: gateway
+        ports:
+        - containerPort: 9000
+        resources: {}
+      restartPolicy: Always
+

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  labels:
+    app: msa-postgres
+  namespace: msa-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msa-postgres
+  template:
+    metadata:
+      labels:
+        app: msa-postgres
+    spec:
+      nodeSelector:
+        msa-node: "true"
+      containers:
+      - image: ${ip}:${port}/msa/msa-postgres:v20240327
+        name: postgres
+        ports:
+        - containerPort: 5432
+        resources: {}
+      restartPolicy: Always

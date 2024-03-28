@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-deployment
+  labels:
+    app: msa-kubernetes
+  namespace: msa-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msa-kubernetes
+  template:
+    metadata:
+      labels:
+        app: msa-kubernetes
+    spec:
+      nodeSelector:
+        msa-node: "true"
+      containers:
+      - env:
+          - name: spring.profiles.active
+            value: prod
+        image: ${ip}:${port}/msa/msa-kubernetes-service:v20240327
+        name: kubernetes
+        ports:
+        - containerPort: 8030
+        resources: {}
+      restartPolicy: Always

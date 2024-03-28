@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  labels:
+    app: msa-user
+  namespace: msa-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msa-user
+  template:
+    metadata:
+      labels:
+        app: msa-user
+    spec:
+      nodeSelector:
+        msa-node: "true"
+      containers:
+      - env:
+          - name: spring.profiles.active
+            value: prod
+        image: ${ip}:${port}/msa/msa-user-service:v20240327
+        name: user
+        ports:
+        - containerPort: 8010
+        resources: {}
+      restartPolicy: Always

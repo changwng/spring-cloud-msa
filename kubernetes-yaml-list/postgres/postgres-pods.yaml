@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres
+  labels:
+    app: msa-postgres
+  namespace: msa-ns
+spec:
+  containers:
+  - image: ${ip}:${port}/msa-postgres:latest
+    name: postgres
+    ports:
+    - containerPort: 5432
+    resources: {}
+  restartPolicy: Always
+status: {}
+

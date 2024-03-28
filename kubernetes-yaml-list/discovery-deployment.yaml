@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-deployment
+  labels:
+    app: msa-discovery
+  namespace: msa-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msa-discovery
+  template:
+    metadata:
+      labels:
+        app: msa-discovery
+    spec:
+      nodeSelector:
+        msa-node: "true"
+      containers:
+      - env:
+          - name: spring.profiles.active
+            value: prod
+          - name: eureka.environment
+            value: prod
+        image: ${ip}:${port}/msa/msa-discovery-service:v20240327
+        name: discovery
+        ports:
+        - containerPort: 8761
+        resources: {}
+      restartPolicy: Always
+

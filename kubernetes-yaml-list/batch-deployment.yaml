@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: batch-deployment
+  labels:
+    app: msa-batch
+  namespace: msa-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msa-batch
+  template:
+    metadata:
+      labels:
+        app: msa-batch
+    spec:
+      nodeSelector:
+        msa-node: "true"
+      containers:
+      - env:
+          - name: spring.profiles.active
+            value: prod
+        image: ${ip}:${port}/msa/msa-batch-service:v20240327
+        name: batch
+        ports:
+        - containerPort: 8020
+        resources: {}
+      restartPolicy: Always

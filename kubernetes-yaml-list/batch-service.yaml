@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: batch-service
+  namespace: msa-ns
+spec:
+  selector:
+    app: msa-batch
+  ports:
+    - port: 8020
+      targetPort: 8020
+# externalIPs:
+#    - ${node_ip}

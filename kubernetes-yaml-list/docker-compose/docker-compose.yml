@@ -1,0 +1,80 @@
+version: '3'
+
+services:
+
+  gateway-service:
+    container_name: gateway-service
+    image: ${ip}:${port}/msa-gateway-service:latest
+    environment:
+      spring.profiles.active: prod
+    ports:
+      - "9000:9000"
+    depends_on:
+      - discovery-service
+    #    restart: always
+    networks:
+      - msa-network
+
+  discovery-service:
+    container_name: discovery-service
+    image: ${ip}:${port}/msa-discovery-service:latest
+    ports:
+      - "8761:8761"
+    #    restart: always
+    networks:
+      - msa-network
+
+  user-service:
+    container_name: user-service
+    image: ${ip}:${port}/msa-user-service:latest
+    environment:
+      spring.profiles.active: prod
+    ports:
+      - "8010:8010"
+    depends_on:
+      - gateway-service
+      - discovery-service
+    #    restart: always
+    networks:
+      - msa-network
+
+  business-service:
+    container_name: business-service
+    image: ${ip}:${port}/msa-business-service:latest
+    environment:
+      spring.profiles.active: prod
+    ports:
+      - "8030:8030"
+    depends_on:
+      - gateway-service
+      - discovery-service
+    #    restart: always
+    networks:
+      - msa-network
+
+  batch-service:
+    container_name: batch-service
+    image: ${ip}:${port}/msa-batch-service:latest
+    environment:
+      spring.profiles.active: prod
+    ports:
+      - "8020:8020"
+    depends_on:
+      - gateway-service
+      - discovery-service
+    #    restart: always
+    networks:
+      - msa-network
+
+  postgres:
+    container_name: postgres
+    image: ${ip}:${port}/msa-postgres:latest
+    ports:
+      - "5432:5432"
+    #    restart: always
+    networks:
+      - msa-network
+
+networks:
+  msa-network:
+    driver: bridge
