@@ -1,4 +1,4 @@
 FROM openjdk:21
-COPY build/libs/*.jar DockerControlService.jar
-CMD ["echo", "Docker Control Start"]
-ENTRYPOINT ["java", "-jar", "DockerControlService.jar"]
+COPY build/libs/*.jar BusinessService.jar
+CMD ["echo", "business service Start"]
+ENTRYPOINT ["java", "-jar", "BusinessService.jar"]

@@ -30,17 +30,10 @@ spring:
           filters:
             - JwtAuthorizationCheckFilter
             - RewritePath=/batch-service/(?<segment>.*),/$\{segment}
-        - id: kubernetes-service
-          uri: lb://KUBERNETES-SERVICE
+        - id: business-service
+          uri: lb://BUSINESS-SERVICE
           predicates:
-            - Path=/kubernetes-service/**
+            - Path=/business-service/**
           filters:
             - JwtAuthorizationCheckFilter
-            - RewritePath=/kubernetes-service/(?<segment>.*),/$\{segment}
-        - id: bff-service
-          uri: lb://BFF-SERVICE
-          predicates:
-            - Path=/bff-service/**
-          filters:
-            - JwtAuthorizationCheckFilter
-            - RewritePath=/bff-service/(?<segment>.*),/$\{segment}
+            - RewritePath=/business-service/(?<segment>.*),/$\{segment}

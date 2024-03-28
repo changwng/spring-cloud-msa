@@ -31,7 +31,7 @@ services:
       context: ./gateway-servicee/
       dockerfile: Dockerfile
     environment:
-      eureka.client.serviceUrl.defaultZone: "http://discovery-service:8761/eureka/"
+      spring.profiles.active: prod
     ports:
       - "9000:9000"
     depends_on:
@@ -46,7 +46,7 @@ services:
       context: ./user-service/
       dockerfile: Dockerfile
     environment:
-      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/
+      spring.profiles.active: prod
     ports:
       - "8010:8010"
     depends_on:
@@ -62,7 +62,7 @@ services:
       context: ./batch-service/
       dockerfile: Dockerfile
     environment:
-      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/
+      spring.profiles.active: prod
     ports:
       - "8020:8020"
     depends_on:
@@ -78,7 +78,7 @@ services:
       context: ./business-service/
       dockerfile: Dockerfile
     environment:
-      eureka.client.serviceUrl.defaultZone: "http://discovery-service:8761/eureka/"
+      spring.profiles.active: prod
     ports:
       - "8030:8030"
     depends_on:
@@ -88,11 +88,6 @@ services:
     networks:
       - msa-network
 
-
 networks:
   msa-network:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.18.0.0/16
-          gateway: 172.18.0.1

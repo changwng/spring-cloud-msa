@@ -3,11 +3,11 @@ thread:
     size: 1
 
 eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: batch-service
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
       defaultZone: http://discovery-service:8761/eureka/
-  instance:
-    prefer-ip-address: true
-    hostname: batch-service
