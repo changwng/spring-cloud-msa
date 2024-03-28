@@ -72,10 +72,10 @@ services:
     networks:
       - msa-network
 
-  docker-control-service:
-    container_name: docker-control-service
+  business-service:
+    container_name: business-service
     build:
-      context: ./docker-control-service/
+      context: ./business-service/
       dockerfile: Dockerfile
     environment:
       eureka.client.serviceUrl.defaultZone: "http://discovery-service:8761/eureka/"

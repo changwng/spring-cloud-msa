@@ -1,0 +1,49 @@
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: gateway-service
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      default-filters:
+        - name: GlobalFilter
+          args:
+            preLogInfo: true
+            postLogInfo: true
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+          filters:
+            - RewritePath=/user-service/(?<segment>.*),/$\{segment}
+        - id: batch-service
+          uri: lb://BATCH-SERVICE
+          predicates:
+            - Path=/batch-service/**
+          filters:
+            - JwtAuthorizationCheckFilter
+            - RewritePath=/batch-service/(?<segment>.*),/$\{segment}
+        - id: kubernetes-service
+          uri: lb://KUBERNETES-SERVICE
+          predicates:
+            - Path=/kubernetes-service/**
+          filters:
+            - JwtAuthorizationCheckFilter
+            - RewritePath=/kubernetes-service/(?<segment>.*),/$\{segment}
+        - id: bff-service
+          uri: lb://BFF-SERVICE
+          predicates:
+            - Path=/bff-service/**
+          filters:
+            - JwtAuthorizationCheckFilter
+            - RewritePath=/bff-service/(?<segment>.*),/$\{segment}

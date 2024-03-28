@@ -1,0 +1,33 @@
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: user-service
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true
+    open-in-view: false
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/postgres
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 1234
+
+jwt:
+  token:
+    access-expired-time: 3600000 # 1 hour
+    refresh-expired-time: 604800000 # 1 week
+    # echo 'spring-boot-spring-cloud-msa-user-service-spring-security-jwt-exem' | base64
+    secret: c3ByaW5nLWJvb3Qtc3ByaW5nLWNsb3VkLW1zYS11c2VyLXNlcnZpY2Utc3ByaW5nLXNlY3VyaXR5LWp3dC1leGVtCg==

@@ -1,9 +1,9 @@
 server:
-  port: 8010
+  port: 8030
 
 spring:
   profiles:
     active: dev
 
   application:
-    name: user-service
+    name: business-service
