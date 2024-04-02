@@ -1,0 +1,80 @@
+name: Docker Image CI
+
+# main 브랜치 push & discovery-service의 변경 내역이 있는 경우
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'discovery-service/**'
+
+env:
+  GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+  TARGET_REPOSITORY: ${{ vars.TARGET_REPOSITORY }} # helm chart github path : ex) Parkjinman/discovery-helm
+  SEQUENCE_NUMBER: ${{ github.run_number }} # workflow 생성 순번
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+      with:
+        gradle-version: '8.5'
+    
+    - name: Build with Gradle 8.5
+      run: |
+            cd discovery-service
+            gradle clean build --exclude-task test
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Set up Docker HTTP
+      run: echo "$(cat /etc/docker/daemon.json)"
+    
+    - name: docker hub login
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    
+    - name: Build the Docker image
+      run: |
+          cd discovery-service
+          docker build -t woodpecker-msa-discovery-service .
+          docker tag woodpecker-msa-discovery-service ${{ secrets.DOCKER_HUB_REGISTRY_NAME }}/woodpecker-msa-discovery-service:${{ env.SEQUENCE_NUMBER }}
+
+    - name: Push Docker image to Nexus Registry
+      run: docker push ${{ secrets.DOCKER_HUB_REGISTRY_NAME }}/woodpecker-msa-discovery-service:${{ env.SEQUENCE_NUMBER }}
+
+    - uses: actions/checkout@v4
+      with:
+        repository: ${{ env.TARGET_REPOSITORY }}
+        token: ${{ env.GIT_TOKEN }}
+    - uses: fjogeleit/yaml-update-action@main
+      with:
+        valueFile: 'values.yaml'
+        value: ${{ env.SEQUENCE_NUMBER }}
+        propertyPath: 'deployment.discovery.image.tag'
+        message: 'ci: Update image tag to ${{ env.SEQUENCE_NUMBER }}'
+        commitChange: true
+        branch: main
+        repository: ${{ env.TARGET_REPOSITORY }}
+        token: ${{ env.GIT_TOKEN }}
