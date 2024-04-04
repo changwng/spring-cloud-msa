@@ -53,9 +53,12 @@ eureka:
       defaultZone: http://discovery-service:8761/eureka/
 ```
 
-
 ### 5) postgres
 - DB서버를 별도로 구축하지 않고도 docker나 k8s에서 바로 실행되어 연결된다.
 
 ### 6) 유저 서비스
 - 기본 회원가입 및 로그인 기능을 제공하며 이때 jwt 토큰이 발급된다.
+
+## Github Actions CI&CD 구축
+
+![image](https://github.com/Parkjinman/spring-cloud-msa/assets/48800354/c7278c0f-8ccc-4546-87db-babd495a45ea)
