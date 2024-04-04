@@ -20,7 +20,7 @@ spring-cloud-msa
 ### 2) 비즈니스 서비스
 - 목적에 따라 비즈니스 로직을 구현하는 API 서버이다.
 
-### 3) 유레카(발견 서비스)
+### 3) 유레카
 - msa의 단점인 서버간 관계의 복잡성을 eureka에 등록을 하여 관리한다.
 - API Gateway는 여기서 등록된 Service Name으로 route한다.
 
