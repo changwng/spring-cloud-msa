@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Image CI discovery-service
 
 # main 브랜치 push & discovery-service의 변경 내역이 있는 경우
 on:
@@ -8,7 +8,7 @@ on:
       - 'discovery-service/**'
 
 env:
-  GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+  GIT_TOKEN: ${{ secrets.GIT_TOKEN }} # helm chart가 존재하는 github target repository에 token이 있어야 접근 가능
   TARGET_REPOSITORY: ${{ vars.TARGET_REPOSITORY }} # helm chart github path : ex) Parkjinman/discovery-helm
   SEQUENCE_NUMBER: ${{ github.run_number }} # workflow 생성 순번
 
