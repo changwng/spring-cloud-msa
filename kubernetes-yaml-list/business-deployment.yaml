@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kubernetes-deployment
+  name: business-deployment
   labels:
     app: msa-kubernetes
   namespace: msa-ns
@@ -9,11 +9,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: msa-kubernetes
+      app: msa-business
   template:
     metadata:
       labels:
-        app: msa-kubernetes
+        app: msa-business
     spec:
 #      nodeSelector:
 #        msa-node: "true"
@@ -21,8 +21,8 @@ spec:
       - env:
           - name: spring.profiles.active
             value: prod
-        image: jinmanpark/spring-cloud-msa-kubernetes-service:v20240405
-        name: kubernetes
+        image: jinmanpark/spring-cloud-msa-business-service:v20240405
+        name: business
         ports:
         - containerPort: 8030
         resources: {}
