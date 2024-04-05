@@ -58,11 +58,11 @@ jobs:
     - name: Build the Docker image
       run: |
           cd discovery-service
-          docker build -t woodpecker-msa-discovery-service .
-          docker tag woodpecker-msa-discovery-service ${{ env.DOCKER_HUB_REGISTRY_NAME }}/woodpecker-msa-discovery-service:${{ env.SEQUENCE_NUMBER }}
+          docker build -t spring-cloud-msa-discovery-service .
+          docker tag spring-cloud-msa-discovery-service ${{ env.DOCKER_HUB_REGISTRY_NAME }}/spring-cloud-msa-discovery-service:${{ env.SEQUENCE_NUMBER }}
 
     - name: Push Docker image to Docker Hub
-      run: docker push ${{ env.DOCKER_HUB_REGISTRY_NAME }}/woodpecker-msa-discovery-service:${{ env.SEQUENCE_NUMBER }}
+      run: docker push ${{ env.DOCKER_HUB_REGISTRY_NAME }}/spring-cloud-msa-discovery-service:${{ env.SEQUENCE_NUMBER }}
 
     - uses: actions/checkout@v4
       with:
@@ -72,7 +72,7 @@ jobs:
       with:
         valueFile: 'values.yaml'
         value: ${{ env.SEQUENCE_NUMBER }}
-        propertyPath: 'deployment.discovery.image.tag'
+        propertyPath: 'discoveryDeployment.discovery.image.tag'
         message: 'ci: Update image tag to ${{ env.SEQUENCE_NUMBER }}'
         commitChange: true
         branch: main
