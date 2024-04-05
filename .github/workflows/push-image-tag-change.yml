@@ -8,9 +8,9 @@ on:
       - 'discovery-service/**'
 
 env:
-  GIT_TOKEN: ${{ secrets.GIT_TOKEN }} # helm chart가 존재하는 github target repository에 token이 있어야 접근 가능
-  TARGET_REPOSITORY: ${{ vars.TARGET_REPOSITORY }} # helm chart github path : ex) Parkjinman/discovery-helm
-  SEQUENCE_NUMBER: ${{ github.run_number }} # workflow 생성 순번
+  GIT_TOKEN: ${{ secrets.GIT_TOKEN }}                # helm chart가 존재하는 github target repository에 token이 있어야 접근 가능
+  TARGET_REPOSITORY: ${{ vars.TARGET_REPOSITORY }}   # helm chart github path : ex) Parkjinman/discovery-helm
+  SEQUENCE_NUMBER: ${{ github.run_number }}          # workflow 생성 순번 - 이미지 tag 이름을 짓기 위해 필요요
 
 jobs:
 
@@ -48,9 +48,6 @@ jobs:
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
-
-    - name: Set up Docker HTTP
-      run: echo "$(cat /etc/docker/daemon.json)"
     
     - name: docker hub login
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -61,7 +58,7 @@ jobs:
           docker build -t woodpecker-msa-discovery-service .
           docker tag woodpecker-msa-discovery-service ${{ secrets.DOCKER_HUB_REGISTRY_NAME }}/woodpecker-msa-discovery-service:${{ env.SEQUENCE_NUMBER }}
 
-    - name: Push Docker image to Nexus Registry
+    - name: Push Docker image to Docker Hub
       run: docker push ${{ secrets.DOCKER_HUB_REGISTRY_NAME }}/woodpecker-msa-discovery-service:${{ env.SEQUENCE_NUMBER }}
 
     - uses: actions/checkout@v4
