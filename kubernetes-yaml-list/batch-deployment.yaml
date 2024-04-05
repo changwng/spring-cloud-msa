@@ -15,13 +15,13 @@ spec:
       labels:
         app: msa-batch
     spec:
-      nodeSelector:
-        msa-node: "true"
+#      nodeSelector:
+#        msa-node: "true"
       containers:
       - env:
           - name: spring.profiles.active
             value: prod
-        image: ${ip}:${port}/msa/msa-batch-service:v20240327
+        image: jinmanpark/spring-cloud-msa-batch-service:v20240405
         name: batch
         ports:
         - containerPort: 8020

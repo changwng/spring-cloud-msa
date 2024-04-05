@@ -15,13 +15,13 @@ spec:
       labels:
         app: msa-user
     spec:
-      nodeSelector:
-        msa-node: "true"
+#      nodeSelector:
+#        msa-node: "true"
       containers:
       - env:
           - name: spring.profiles.active
             value: prod
-        image: ${ip}:${port}/msa/msa-user-service:v20240327
+        image: jinmanpark/spring-cloud-msa-user-service:v20240405
         name: user
         ports:
         - containerPort: 8010

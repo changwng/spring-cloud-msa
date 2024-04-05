@@ -15,15 +15,15 @@ spec:
       labels:
         app: msa-discovery
     spec:
-      nodeSelector:
-        msa-node: "true"
+#      nodeSelector:
+#        msa-node: "true"
       containers:
       - env:
           - name: spring.profiles.active
             value: prod
           - name: eureka.environment
             value: prod
-        image: ${ip}:${port}/msa/msa-discovery-service:v20240327
+        image: jinmanpark/spring-cloud-msa-discovery-service:v20240405
         name: discovery
         ports:
         - containerPort: 8761

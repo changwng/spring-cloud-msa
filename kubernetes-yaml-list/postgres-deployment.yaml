@@ -15,10 +15,10 @@ spec:
       labels:
         app: msa-postgres
     spec:
-      nodeSelector:
-        msa-node: "true"
+#      nodeSelector:
+#        msa-node: "true"
       containers:
-      - image: ${ip}:${port}/msa/msa-postgres:v20240327
+      - image: jinmanpark/spring-cloud-msa-postgres:v20240405
         name: postgres
         ports:
         - containerPort: 5432
