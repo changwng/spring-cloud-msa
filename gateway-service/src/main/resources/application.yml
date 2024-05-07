@@ -1,15 +1,7 @@
 server:
   port: 9000
-
-management:
-  endpoint:
-    web:
-      exposure:
-        include: info, health, metrics, prometheus
-  atlas:
-    metrics:
-      export:
-        enabled: false
+  servlet:
+    context-path: /gateway
 
 spring:
   profiles:

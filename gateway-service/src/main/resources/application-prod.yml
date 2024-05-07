@@ -6,7 +6,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://discovery-service:8761/eureka/
+      defaultZone: http://discovery-service:8761/discovery/eureka/
 
 spring:
   application:
@@ -14,29 +14,46 @@ spring:
 
   cloud:
     gateway:
+#      default-filters:
+#        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       default-filters:
         - name: GlobalFilter
           args:
             preLogInfo: true
             postLogInfo: true
+###    web-service와 통신할 때 필요한 cors설정
+#      globalcors:
+#        cors-configurations:
+#          '[/**]':
+#            allowedOrigins: "http://localhost:3000"
+#            allowedMethods:
+#              - GET
+#              - POST
+#              - PUT
+#              - DELETE
+#            allowedHeaders:
+#              - Content-Type
+#              - Authorization
+#            allowCredentials: true
+#            maxAge: 3600
       routes:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service/**
+            - Path=/gateway/user-service/**
           filters:
-            - RewritePath=/user-service/(?<segment>.*),/$\{segment}
+            - RewritePath=/gateway/user-service/(?<segment>.*),/$\{segment}
         - id: batch-service
           uri: lb://BATCH-SERVICE
           predicates:
-            - Path=/batch-service/**
+            - Path=/gateway/batch-service/**
           filters:
             - JwtAuthorizationCheckFilter
-            - RewritePath=/batch-service/(?<segment>.*),/$\{segment}
+            - RewritePath=/gateway/batch-service/(?<segment>.*),/$\{segment}
         - id: business-service
           uri: lb://BUSINESS-SERVICE
           predicates:
-            - Path=/business-service/**
+            - Path=/gateway/business-service/**
           filters:
             - JwtAuthorizationCheckFilter
-            - RewritePath=/business-service/(?<segment>.*),/$\{segment}
+            - RewritePath=/gateway/business-service/(?<segment>.*),/$\{segment}
