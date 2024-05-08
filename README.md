@@ -13,6 +13,9 @@ spring-cloud-msa
   - postgres
   - user-service
 
+## 아키텍처
+![image](https://github.com/Parkjinman/spring-cloud-msa/assets/48800354/55eb48ee-c44b-429c-8322-bdb6cfda6100)
+
 ## 설명
 ### 1) 배치 서비스
 - 스프링 배치, 스케쥴링을 사용할 수 있다.
