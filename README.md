@@ -46,7 +46,7 @@ client가 아닌 eureka 본서버이기 때문에 모든 설정은 false여야 �
 - defaultZone의 hostname은 docker와 k8s의 클러스터 내부 IP를 이용해야하기 때문에 prod에 설정한다.
 * 라우팅 사용 규칙
   - /gateway/${서비스명}/${매핑URI}
-  - ex) http://10.10.50.231:30100/gateway/user-service/certification
+  - ex) http://10.10.50.231:30100/gateway/user-service/auth/login
 ```yml
 # discovery 등록 방법
 eureka:
