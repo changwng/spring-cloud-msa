@@ -43,8 +43,12 @@ client가 아닌 eureka 본서버이기 때문에 모든 설정은 false여야 �
 ### 4) API 게이트웨이
 - api gateway는 jwt(인증, 인가), 라우팅, 기능을 제공한다.
 - 라운드 로빈 방식의 로드밸런싱 기능을 제공한다.
-- defaultZone의 hostname은 docker와 k8s의 클러스터 내부 IP를 이용해야하기 때문에 prod에 설정한다. 
+- defaultZone의 hostname은 docker와 k8s의 클러스터 내부 IP를 이용해야하기 때문에 prod에 설정한다.
+* 라우팅 사용 규칙
+  - /gateway/${서비스명}/${매핑URI}
+  - ex) http://10.10.50.231:30100/gateway/user-service/certification
 ```yml
+# discovery 등록 방법
 eureka:
   instance:
     prefer-ip-address: true
@@ -58,6 +62,15 @@ eureka:
 
 ### 5) postgres
 - DB서버를 별도로 구축하지 않고도 docker나 k8s에서 바로 실행되어 연결된다.
+- spring-cloud-helm > value.yaml에서 externalIPs를 자신의 환경에 맞게 변경해야한다.
+```yaml
+postgres:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP
+  externalIPs: ${nodeIP}
+```
 
 ### 6) 유저 서비스
 - 기본 회원가입 및 로그인 기능을 제공하며 이때 jwt 토큰이 발급된다.
