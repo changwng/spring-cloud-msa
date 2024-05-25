@@ -1,0 +1,19 @@
+---
+spring:
+  config:
+    activate:
+      on-profile: springdoc-dev
+
+springdoc:
+  api-docs:
+    enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: springdoc-prod
+
+springdoc:
+  api-docs:
+    enabled: true

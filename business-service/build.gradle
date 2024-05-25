@@ -8,6 +8,10 @@ plugins {
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'java'
+
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id "com.gorylenko.gradle-git-properties" version "2.4.1"
+    id "com.epages.restdocs-api-spec" version "0.17.1"
 }
 
 group = 'com.example'
@@ -18,6 +22,7 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    asciidoctorExt
 }
 
 repositories {
@@ -26,6 +31,7 @@ repositories {
 
 ext {
     set('springCloudVersion', "2023.0.0")
+    set("snippetsDir", file("build/generated-snippets"))
 }
 
 dependencies {
@@ -36,10 +42,17 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
     runtimeOnly 'org.postgresql:postgresql'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'com.epages:restdocs-api-spec:0.17.1'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.17.1'
+
+    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
 }
 
 dependencyManagement {
@@ -49,5 +62,69 @@ dependencyManagement {
 }
 
 test {
+    outputs.dir snippetsDir
     useJUnitPlatform()
+}
+
+tasks.register("restDocsTest", Test) {
+    outputs.dir snippetsDir
+    useJUnitPlatform {
+        includeTags("restDocs")
+    }
+
+    dependsOn test
+    finalizedBy "asciidoctor"
+    finalizedBy "openapi3"
+}
+
+asciidoctor {
+    dependsOn restDocsTest
+
+    inputs.dir snippetsDir
+    configurations "asciidoctorExt"
+    baseDirFollowsSourceDir()
+}
+
+openapi3 {
+    servers = [
+            { url = 'http://localhost:8030' },
+    ]
+    title = 'spring-rest-docs-guide'
+    description = 'Spring REST Docs 테스트 생성물 생성시 추가생성되는 OpenAPI 문서이용'
+    version = "${project.version}"
+    format = 'yaml'
+}
+
+tasks.register("apiBuild", GradleBuild) {
+    tasks = ["clean", "restDocsTest", "build"]
+}
+
+springBoot {
+    buildInfo()
+}
+
+gitProperties {
+    dateFormat = "yyyy-MM-dd'T'HH:mm:ss.Zz"
+    dateFormatTimeZone = "Asia/Seoul"
+    failOnNoGitDirectory = false
+}
+
+bootJar {
+    dependsOn asciidoctor
+
+    from("swagger-ui") {
+        into "BOOT-INF/classes/static/swagger"
+    }
+    from("${asciidoctor.outputDir}") {
+        into "BOOT-INF/classes/static/docs"
+    }
+    from("build/api-spec") {
+        into "BOOT-INF/classes/static/swagger"
+    }
+
+    archiveFileName.set("application.jar")
+}
+
+jar {
+    enabled = false
 }
