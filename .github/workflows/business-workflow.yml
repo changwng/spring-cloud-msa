@@ -44,10 +44,25 @@ jobs:
       with:
         gradle-version: '8.5'
 
-    - name: Build with Gradle 8.5
+    - name: Grant execute permission for gradlew
       run: |
-            cd business-service
-            gradle clean build --exclude-task test
+        cd kubernetes-service 
+        chmod +x ./gradlew
+
+    - name: Clean and build
+      run: |
+        cd kubernetes-service
+        ./gradlew clean build
+
+    - name: Clean and run restDocsTest
+      run: |
+        cd kubernetes-service
+        ./gradlew clean restDocsTest
+
+    - name: Run apiBuild
+      run: |
+        cd kubernetes-service
+        ./gradlew apiBuild
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
