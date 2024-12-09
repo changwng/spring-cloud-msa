@@ -13,6 +13,14 @@ services:
     networks:
       - msa-network
 
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    #    restart: always
+    networks:
+      - msa-network
 
   discovery-service:
     container_name: discovery-service
@@ -28,7 +36,7 @@ services:
   gateway-service:
     container_name: gateway-service
     build:
-      context: ./gateway-servicee/
+      context: ./gateway-service/
       dockerfile: Dockerfile
     environment:
       spring.profiles.active: prod

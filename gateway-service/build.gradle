@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.covenant'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '21'
+sourceCompatibility = '17'
 
 configurations {
     compileOnly {
@@ -27,6 +27,11 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:2.5.5'
 
+    // zipkin & micrometer
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
@@ -44,4 +49,12 @@ dependencyManagement {
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    enabled = false
+}
+
+test {
+    enabled = false
 }

@@ -10,6 +10,29 @@ spring:
   application:
     name: gateway-service
 
+  zipkin:
+    base-url: http://127.0.0.1:9411
+    enabled: true
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      consume: b3_multi
+      produce: b3_multi
+  zipkin:
+    tracing:
+      endpoint: "http://zipkin:9411/api/v2/spans"
+  endpoints:
+    web:
+      exposure:
+        include: health, httptrace, info, metrics, prometheus
+
+logging:
+  pattern:
+    level: "%5p [%X{traceId:-},%X{spanId:-}]"
+
 jwt:
   token:
     secret: c3ByaW5nLWJvb3Qtc3ByaW5nLWNsb3VkLW1zYS11c2VyLXNlcnZpY2Utc3ByaW5nLXNlY3VyaXR5LWp3dC10ZXN0Cg==
