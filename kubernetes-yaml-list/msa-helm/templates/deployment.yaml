@@ -197,3 +197,30 @@ spec:
         - containerPort: 8010
         resources: {}
       restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zipkin
+  labels:
+    app: zipkin
+  {{- include "msa-helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.zipkin.replicaCount }}
+  selector:
+    matchLabels:
+      app: zipkin
+    {{- include "msa-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: zipkin
+      {{- include "msa-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: zipkin
+        image: "{{ .Values.zipkin.image.repository }}:{{ .Values.zipkin.image.tag }}"
+        resources:
+          {{- toYaml .Values.zipkin.resources | nindent 12 }}
+        ports:
+        - containerPort: 9411
