@@ -7,7 +7,7 @@ metadata:
   namespace: msa-ns
 spec:
   containers:
-  - image: postgres:latest
+  - image: changwng/spring-cloud-msa-postgres:latest
     name: postgres
     ports:
     - containerPort: 5432

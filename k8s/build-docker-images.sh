@@ -32,7 +32,8 @@ echo "Building common module..."
 echo "=== Processing $service ==="
 # 각 서비스 빌드 및 도커 이미지 생성
 #services=("config" "discovery" "apigateway" "user-service" "board-service" "cms-service" "attach-service")
-services=("discovery-service" "gateway-service" "user-service" "batch-service" "business-service")
+#services=("discovery-service" "gateway-service" "user-service" "batch-service" "business-service")
+services=("postgres")
 for service in "${services[@]}"
 do
     echo "=== Processing $service ==="
@@ -42,7 +43,7 @@ do
     pwd
 
     echo "Building $service with Gradle..."
-    ./gradlew clean build -x test
+    #./gradlew clean build -x test
     
     echo "Checking Dockerfile existence..."
     if [ ! -f "Dockerfile" ]; then

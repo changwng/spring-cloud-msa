@@ -18,7 +18,7 @@ spec:
 #      nodeSelector:
 #        msa-node: "true"
       containers:
-      - image: postgres:latest
+      - image: changwng/spring-cloud-msa-postgres:latest
         name: postgres
         ports:
         - containerPort: 5432

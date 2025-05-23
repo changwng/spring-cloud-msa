@@ -14,5 +14,19 @@ helm install spring-cloud-msa-app . --namespace msa-ns --create-namespace
 helm list -n msa-ns
 kubectl get all -n msa-ns
 
+helm uninstall spring-cloud-msa-app -n msa-ns
+
+
 kubectl create namespace msa-ns
 kubectl config set-context --current --namespace=msa-ns
+
+
+# portforwarding 외부 접속
+nohup kubectl port-forward --address=0.0.0.0 -n msa-ns service/discovery-service 8761:8762>> /opt/apps/kubernetes/logs/discovery.out 2>&1 &
+nohup kubectl port-forward --address=0.0.0.0 -n msa-ns service/gateway-service 9000:9000>> /opt/apps/kubernetes/logs/gateway.out 2>&1 &
+nohup kubectl port-forward --address=0.0.0.0 -n msa-ns service/postgres  5432:5433>> /opt/apps/kubernetes/logs/postgres.out 2>&1 &
+
+
+nohup kubectl port-forward --address=0.0.0.0 -n msa-ns service/discovery-service 8762:8761>> discovery.out 2>&1 &
+nohup kubectl port-forward --address=0.0.0.0 -n msa-ns service/gateway-service 9000:9000>> gateway.out 2>&1 &
+nohup kubectl port-forward --address=0.0.0.0 -n msa-ns service/postgres  5433:5432>> postgres.out 2>&1 &
