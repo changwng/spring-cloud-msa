@@ -21,7 +21,7 @@ spec:
       - env:
         - name: spring.profiles.active
           value: prod
-        image: jinmanpark/spring-cloud-msa-gateway-service:v20240405
+        image: changwng/spring-cloud-msa-gateway-service:latest
         name: gateway
         ports:
         - containerPort: 9000

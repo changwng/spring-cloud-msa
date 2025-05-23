@@ -21,7 +21,7 @@ spec:
       - env:
           - name: spring.profiles.active
             value: prod
-        image: jinmanpark/spring-cloud-msa-batch-service:v20240405
+        image: changwng/spring-cloud-msa-batch-service:latest
         name: batch
         ports:
         - containerPort: 8020

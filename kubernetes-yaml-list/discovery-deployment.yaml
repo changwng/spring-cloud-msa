@@ -23,7 +23,7 @@ spec:
             value: prod
           - name: eureka.environment
             value: prod
-        image: jinmanpark/spring-cloud-msa-discovery-service:v20240405
+        image: changwng/spring-cloud-msa-discovery-service:latest
         name: discovery
         ports:
         - containerPort: 8761

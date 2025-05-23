@@ -1,0 +1,199 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: batch-deployment
+  labels:
+    app: msa-batch
+  {{- include "msa-helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.batchDeployment.replicas }}
+  selector:
+    matchLabels:
+      app: msa-batch
+    {{- include "msa-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: msa-batch
+      {{- include "msa-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: spring.profiles.active
+          value: {{ quote .Values.batchDeployment.batch.env.springProfilesActive }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.batchDeployment.batch.image.repository }}:{{ .Values.batchDeployment.batch.image.tag
+          | default .Chart.AppVersion }}
+        name: batch
+        ports:
+        - containerPort: 8020
+        resources: {}
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: business-deployment
+  labels:
+    app: msa-kubernetes
+  {{- include "msa-helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.businessDeployment.replicas }}
+  selector:
+    matchLabels:
+      app: msa-business
+    {{- include "msa-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: msa-business
+      {{- include "msa-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: spring.profiles.active
+          value: {{ quote .Values.businessDeployment.business.env.springProfilesActive
+            }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.businessDeployment.business.image.repository }}:{{ .Values.businessDeployment.business.image.tag
+          | default .Chart.AppVersion }}
+        name: business
+        ports:
+        - containerPort: 8030
+        resources: {}
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-deployment
+  labels:
+    app: msa-discovery
+  {{- include "msa-helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.discoveryDeployment.replicas }}
+  selector:
+    matchLabels:
+      app: msa-discovery
+    {{- include "msa-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: msa-discovery
+      {{- include "msa-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: spring.profiles.active
+          value: {{ quote .Values.discoveryDeployment.discovery.env.springProfilesActive
+            }}
+        - name: eureka.environment
+          value: {{ quote .Values.discoveryDeployment.discovery.env.eurekaEnvironment }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.discoveryDeployment.discovery.image.repository }}:{{ .Values.discoveryDeployment.discovery.image.tag
+          | default .Chart.AppVersion }}
+        name: discovery
+        ports:
+        - containerPort: 8761
+        resources: {}
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+  labels:
+    app: msa-gateway
+  {{- include "msa-helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.gatewayDeployment.replicas }}
+  selector:
+    matchLabels:
+      app: msa-gateway
+    {{- include "msa-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: msa-gateway
+      {{- include "msa-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: spring.profiles.active
+          value: {{ quote .Values.gatewayDeployment.gateway.env.springProfilesActive }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.gatewayDeployment.gateway.image.repository }}:{{ .Values.gatewayDeployment.gateway.image.tag
+          | default .Chart.AppVersion }}
+        name: gateway
+        ports:
+        - containerPort: 9000
+        resources: {}
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  labels:
+    app: msa-postgres
+  {{- include "msa-helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.postgresDeployment.replicas }}
+  selector:
+    matchLabels:
+      app: msa-postgres
+    {{- include "msa-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: msa-postgres
+      {{- include "msa-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.postgresDeployment.postgres.image.repository }}:{{ .Values.postgresDeployment.postgres.image.tag
+          | default .Chart.AppVersion }}
+        name: postgres
+        ports:
+        - containerPort: 5432
+        resources: {}
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  labels:
+    app: msa-user
+  {{- include "msa-helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.userDeployment.replicas }}
+  selector:
+    matchLabels:
+      app: msa-user
+    {{- include "msa-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: msa-user
+      {{- include "msa-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: spring.profiles.active
+          value: {{ quote .Values.userDeployment.user.env.springProfilesActive }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.userDeployment.user.image.repository }}:{{ .Values.userDeployment.user.image.tag
+          | default .Chart.AppVersion }}
+        name: user
+        ports:
+        - containerPort: 8010
+        resources: {}
+      restartPolicy: Always

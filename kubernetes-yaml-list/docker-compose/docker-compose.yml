@@ -4,7 +4,7 @@ services:
 
   gateway-service:
     container_name: gateway-service
-    image: ${ip}:${port}/msa-gateway-service:latest
+    image: changwng/spring-cloud-msa-gateway-service:latest
     environment:
       spring.profiles.active: prod
     ports:
@@ -17,7 +17,7 @@ services:
 
   discovery-service:
     container_name: discovery-service
-    image: ${ip}:${port}/msa-discovery-service:latest
+    image: changwng/spring-cloud-msa-discovery-service:latest
     ports:
       - "8761:8761"
     #    restart: always
@@ -26,7 +26,7 @@ services:
 
   user-service:
     container_name: user-service
-    image: ${ip}:${port}/msa-user-service:latest
+    image: changwng/spring-cloud-msa-user-service:latest
     environment:
       spring.profiles.active: prod
     ports:
@@ -40,7 +40,7 @@ services:
 
   business-service:
     container_name: business-service
-    image: ${ip}:${port}/msa-business-service:latest
+    image: changwng/spring-cloud-msa-business-service:latest
     environment:
       spring.profiles.active: prod
     ports:
@@ -54,7 +54,7 @@ services:
 
   batch-service:
     container_name: batch-service
-    image: ${ip}:${port}/msa-batch-service:latest
+    image: changwng/spring-cloud-msa-batch-service:latest
     environment:
       spring.profiles.active: prod
     ports:
@@ -68,7 +68,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: ${ip}:${port}/msa-postgres:latest
+    image: postgres:latest
     ports:
       - "5432:5432"
     #    restart: always

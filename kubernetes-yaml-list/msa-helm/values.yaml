@@ -1,0 +1,78 @@
+batchDeployment:
+  batch:
+    env:
+      springProfilesActive: prod
+    image:
+      repository: changwng/spring-cloud-msa-batch-service
+      tag: latest
+  replicas: 1
+batchService:
+  ports:
+  - port: 8020
+    targetPort: 8020
+  type: ClusterIP
+businessDeployment:
+  business:
+    env:
+      springProfilesActive: prod
+    image:
+      repository: changwng/spring-cloud-msa-business-service
+      tag: latest
+  replicas: 1
+businessService:
+  ports:
+  - port: 8030
+    targetPort: 8030
+  type: ClusterIP
+discoveryDeployment:
+  discovery:
+    env:
+      eurekaEnvironment: prod
+      springProfilesActive: prod
+    image:
+      repository: changwng/spring-cloud-msa-discovery-service
+      tag: latest
+  replicas: 1
+discoveryService:
+  ports:
+  - port: 8761
+    targetPort: 8761
+  type: ClusterIP
+gatewayDeployment:
+  gateway:
+    env:
+      springProfilesActive: prod
+    image:
+      repository: changwng/spring-cloud-msa-gateway-service
+      tag: latest
+  replicas: 1
+gatewayService:
+  ports:
+  - port: 9000
+    targetPort: 9000
+  type: ClusterIP
+kubernetesClusterDomain: cluster.local
+postgres:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  type: ClusterIP
+postgresDeployment:
+  postgres:
+    image:
+      repository: changwng/spring-cloud-msa-postgres
+      tag: latest
+  replicas: 1
+userDeployment:
+  replicas: 1
+  user:
+    env:
+      springProfilesActive: prod
+    image:
+      repository: changwng/spring-cloud-msa-user-service
+      tag: latest
+userService:
+  ports:
+  - port: 8010
+    targetPort: 8010
+  type: ClusterIP

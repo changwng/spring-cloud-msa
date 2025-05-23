@@ -21,7 +21,7 @@ spec:
       - env:
           - name: spring.profiles.active
             value: prod
-        image: jinmanpark/spring-cloud-msa-user-service:v20240405
+        image: changwng/spring-cloud-msa-user-service:latest
         name: user
         ports:
         - containerPort: 8010

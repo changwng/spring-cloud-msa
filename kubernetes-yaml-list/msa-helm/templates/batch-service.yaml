@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: batch-service
+  labels:
+  {{- include "msa-helm.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.batchService.type }}
+  selector:
+    app: msa-batch
+    {{- include "msa-helm.selectorLabels" . | nindent 4 }}
+  ports:
+  {{- .Values.batchService.ports | toYaml | nindent 2 }}
